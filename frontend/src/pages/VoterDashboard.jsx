@@ -12,21 +12,21 @@ export default function VoterDashboard() {
   const { user, clearLogin } = useAuth()
   const navigate = useNavigate()
 
-  const [tokenData,    setTokenData]    = useState(null)
-  const [history,      setHistory]      = useState([])
-  const [leaderboard,  setLeaderboard]  = useState([])
-  const [tab,          setTab]          = useState('tokens')   // tokens | history | leaderboard
-  const [loading,      setLoading]      = useState(true)
-  const [redeemMsg,    setRedeemMsg]    = useState('')
+  const [tokenData, setTokenData] = useState(null)
+  const [history, setHistory] = useState([])
+  const [leaderboard, setLeaderboard] = useState([])
+  const [tab, setTab] = useState('tokens')   // tokens | history | leaderboard
+  const [loading, setLoading] = useState(true)
+  const [redeemMsg, setRedeemMsg] = useState('')
 
   useEffect(() => {
     Promise.all([getMyTokens(), getMyHistory(), getLeaderboard()])
       .then(([td, hist, lb]) => {
         setTokenData(td)
         setHistory(hist.feedback_history || [])
-        setLeaderboard(lb.leaderboard    || [])
+        setLeaderboard(lb.leaderboard || [])
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false))
   }, [])
 
@@ -43,7 +43,7 @@ export default function VoterDashboard() {
   }
 
   async function handleLogout() {
-    try { await logout() } catch {}
+    try { await logout() } catch { }
     clearLogin()
     navigate('/login')
   }
@@ -145,14 +145,14 @@ export default function VoterDashboard() {
 
             {/* Level progression cards */}
             {[
-              { milestone: 154,  icon: '🍎', name: 'Food Explorer',   reward: 'Extra Fruit',            color: '#27AE60' },
-              { milestone: 369,  icon: '🫓', name: 'Mess Influencer', reward: 'Extra Roti / Add-on',    color: '#E67E22' },
-              { milestone: 649,  icon: '⚡', name: 'Food Critic',     reward: 'Priority Serving (Skip the Line!)', color: '#1A56A0' },
-              { milestone: 1599, icon: '🥤', name: 'Mess Legend',     reward: 'Free Snack or Drink',    color: '#8E44AD' },
-              { milestone: 2999, icon: '🎁', name: 'Ultimate Foodie', reward: 'Special Snack Pass',     color: '#E74C3C' },
+              { milestone: 154, icon: '🍎', name: 'Food Explorer', reward: 'Extra Fruit', color: '#27AE60' },
+              { milestone: 369, icon: '🫓', name: 'Mess Influencer', reward: 'Extra Roti / Add-on', color: '#E67E22' },
+              { milestone: 649, icon: '⚡', name: 'Food Critic', reward: 'Priority Serving (Skip the Line!)', color: '#1A56A0' },
+              { milestone: 1599, icon: '🥤', name: 'Mess Legend', reward: 'Free Snack or Drink', color: '#8E44AD' },
+              { milestone: 2999, icon: '🎁', name: 'Ultimate Foodie', reward: 'Special Snack Pass', color: '#E74C3C' },
             ].map(({ milestone, icon, name, reward, color }) => {
-              const unlocked  = total >= milestone
-              const redeemed  = tokenData?.redeemed_milestones?.includes(milestone)
+              const unlocked = total >= milestone
+              const redeemed = tokenData?.redeemed_milestones?.includes(milestone)
               const available = tokenData?.available_rewards?.find(r => r.milestone === milestone)
 
               return (
@@ -185,12 +185,14 @@ export default function VoterDashboard() {
                     redeemed
                       ? <span className="badge badge-green">✅ Redeemed</span>
                       : <button className="btn btn-primary btn-sm" onClick={() => handleRedeem(milestone)}>
-                          Redeem
-                        </button>
+                        Redeem
+                      </button>
                   )}
                   {!unlocked && (
-                    <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--bg)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+                    <div style={{
+                      width: 48, height: 48, borderRadius: '50%', background: 'var(--bg)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20
+                    }}>
                       🔒
                     </div>
                   )}

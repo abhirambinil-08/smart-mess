@@ -15,10 +15,10 @@ import { useAuth } from '../context/AuthContext'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function AdminDashboard() {
-  const { user }            = useAuth()
-  const [data,    setData]  = useState(null)
+  const { user } = useAuth()
+  const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error,   setError]   = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     getDashboard()
@@ -28,9 +28,9 @@ export default function AdminDashboard() {
   }, [])
 
   if (loading) return <div className="page-loader"><div className="spinner spinner-dark" /><span>Loading dashboard...</span></div>
-  if (error)   return <div className="alert alert-error">{error}</div>
+  if (error) return <div className="alert alert-error">{error}</div>
 
-  const stats  = data?.mess_stats      || []
+  const stats = data?.mess_stats || []
   const recent = data?.recent_feedback || []
   const labels = stats.map(s => s.mess)
 
@@ -38,9 +38,9 @@ export default function AdminDashboard() {
     labels,
     datasets: [
       { label: 'Food Quality', data: stats.map(s => s.avg_quality), backgroundColor: '#1A56A0CC' },
-      { label: 'Taste',        data: stats.map(s => s.avg_taste),   backgroundColor: '#1ABC9CCC' },
-      { label: 'Hygiene',      data: stats.map(s => s.avg_hygiene), backgroundColor: '#E67E22CC' },
-      { label: 'Staff',        data: stats.map(s => s.avg_staff),   backgroundColor: '#8E44ADCC' },
+      { label: 'Taste', data: stats.map(s => s.avg_taste), backgroundColor: '#1ABC9CCC' },
+      { label: 'Hygiene', data: stats.map(s => s.avg_hygiene), backgroundColor: '#E67E22CC' },
+      { label: 'Staff', data: stats.map(s => s.avg_staff), backgroundColor: '#8E44ADCC' },
     ],
   }
 
@@ -62,10 +62,10 @@ export default function AdminDashboard() {
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 16, marginBottom: 28 }}>
         {[
-          { icon: '📝', label: 'Total Feedback', value: data.total_feedback, bg: '#EBF4FB', ic: '#1A56A0' },
-          { icon: '🍽️', label: 'Mess Locations', value: data.total_mess,     bg: '#E8F8F0', ic: '#27AE60' },
-          { icon: '🎓', label: 'Total Voters',   value: data.total_voters,   bg: '#F3E8FF', ic: '#8E44AD' },
-          { icon: '⭐', label: 'Best Score',     value: stats.length ? Math.max(...stats.map(s => s.overall_avg)).toFixed(1) + '★' : 'N/A', bg: '#FFF3E0', ic: '#E67E22' },
+          { label: 'Total Feedback', value: data.total_feedback, bg: '#EBF4FB', ic: '#1A56A0' },
+          { label: 'Mess Locations', value: data.total_mess, bg: '#E8F8F0', ic: '#27AE60' },
+          { label: 'Total Voters', value: data.total_voters, bg: '#F3E8FF', ic: '#8E44AD' },
+          { label: 'Best Score', value: stats.length ? Math.max(...stats.map(s => s.overall_avg)).toFixed(1) + '★' : 'N/A', bg: '#FFF3E0', ic: '#E67E22' },
         ].map(({ icon, label, value, bg, ic }) => (
           <div className="stat-card" key={label}>
             <div className="stat-icon" style={{ background: bg, color: ic }}>{icon}</div>
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
       {/* Mess table */}
       {stats.length > 0 && (
         <div className="card" style={{ marginBottom: 24, overflowX: 'auto' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>🏆 Mess Rankings</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}> Mess Rankings</h2>
           <table className="table">
             <thead>
               <tr>
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
             <tbody>
               {[...stats].sort((a, b) => b.overall_avg - a.overall_avg).map((s, i) => (
                 <tr key={s.mess}>
-                  <td>{['🥇','🥈','🥉'][i] || `#${i+1}`}</td>
+                  <td>{['🥇', '🥈', '🥉'][i] || `#${i + 1}`}</td>
                   <td style={{ fontWeight: 600 }}>{s.mess}</td>
                   <td>{s.total_feedback}</td>
                   <td>{s.avg_quality}</td>
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
                   <td>{s.avg_staff}</td>
                   <td>
                     <span style={{ fontWeight: 700, color: s.overall_avg >= 3.5 ? 'var(--green)' : s.overall_avg >= 2.5 ? 'var(--orange)' : 'var(--red)' }}>
-                      {s.overall_avg} ⭐
+                      {s.overall_avg}
                     </span>
                   </td>
                 </tr>
@@ -123,10 +123,10 @@ export default function AdminDashboard() {
       {/* Recent feedback */}
       {recent.length > 0 && (
         <div className="card">
-          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>🕐 Recent Feedback</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}> Recent Feedback</h2>
           {recent.map((f, i) => (
             <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderTop: i > 0 ? '1px solid var(--border)' : 'none' }}>
-              <div style={{ fontSize: 24 }}>🍽️</div>
+              <div style={{ fontSize: 24 }}></div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{f.username} — {f.meal_type}</div>
                 <div style={{ fontSize: 12, color: 'var(--grey)', marginTop: 2 }}>{f.date_str} · {f.slot} slot</div>

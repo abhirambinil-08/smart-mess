@@ -278,3 +278,6 @@ async def get_online_users(user: dict = Depends(get_current_user)):
             "last_seen": s["last_seen"].isoformat(),
         })
     return {"online_users": online, "count": len(online)}
+@router.post("/heartbeat")
+def heartbeat():
+    return {"status": "alive"}

@@ -1,21 +1,19 @@
 # ============================================================
 #  services/feedguard.py  — FeedGuard AI: Fake Feedback Detector
-#  Uses Claude API to analyze feedback genuineness before saving.
-#  Fake/random submissions → warning deducted from student tokens.
+#  Uses Google Gemini API to analyze feedback genuineness.
+#  Fake/random submissions → warning + token deduction.
 # ============================================================
 
 import os
 import httpx
 import json
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
-# Score below this threshold = feedback flagged as suspicious
 SUSPICION_THRESHOLD = 40
 
 
@@ -27,7 +25,7 @@ async def analyze_feedback_genuineness(
     has_image: bool,
 ) -> dict:
     """
-    Calls Claude API to score the genuineness of a feedback submission.
+    Calls Gemini API to score the genuineness of a feedback submission.
 
     Returns:
         {
@@ -37,9 +35,8 @@ async def analyze_feedback_genuineness(
             "flags": list[str],    # Specific red flags found
         }
     """
-    if not ANTHROPIC_API_KEY:
-        # If no API key configured, skip AI check and pass all feedback
-        logger.warning("FeedGuard: ANTHROPIC_API_KEY not set. Skipping AI check.")
+    if not GEMINI_API_KEY:
+        logger.warning("FeedGuard: GEMINI_API_KEY not set. Skipping AI check.")
         return {
             "score": 75,
             "is_suspicious": False,
@@ -94,25 +91,21 @@ Respond ONLY with valid JSON in this exact format:
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
             response = await client.post(
-                ANTHROPIC_API_URL,
-                headers={
-                    "x-api-key": ANTHROPIC_API_KEY,
-                    "anthropic-version": "2023-06-01",
-                    "content-type": "application/json",
-                },
+                f"{GEMINI_API_URL}?key={GEMINI_API_KEY}",
+                headers={"Content-Type": "application/json"},
                 json={
-                    "model": "claude-haiku-4-5-20251001",
-                    "max_tokens": 300,
-                    "messages": [{"role": "user", "content": prompt}],
+                    "contents": [{
+                        "parts": [{"text": prompt}]
+                    }]
                 },
             )
 
         if response.status_code != 200:
-            logger.error(f"FeedGuard API error: {response.status_code} {response.text}")
+            logger.error(f"FeedGuard Gemini API error: {response.status_code} {response.text}")
             return _fallback_result()
 
         data = response.json()
-        raw_text = data["content"][0]["text"].strip()
+        raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
         # Strip markdown fences if present
         if raw_text.startswith("```"):
@@ -155,6 +148,7 @@ async def apply_fake_feedback_penalty(db, user_id: str, username: str) -> dict:
     Returns updated warning info.
     """
     from bson import ObjectId
+    from datetime import datetime
 
     user_doc = await db.users.find_one({"_id": ObjectId(user_id)})
     if not user_doc:
@@ -175,7 +169,6 @@ async def apply_fake_feedback_penalty(db, user_id: str, username: str) -> dict:
     )
 
     # Log the penalty
-    from datetime import datetime
     await db.token_logs.insert_one({
         "user_id":    user_id,
         "username":   username,

@@ -18,20 +18,20 @@ async function authFetch(path, token) {
 
 export default function AdminInsightsPage() {
   const { user, token } = useAuth()
-  const isAdmin         = user?.role === 'admin'
+  const isAdmin = user?.role === 'admin'
 
-  const [insights,   setInsights]   = useState([])
+  const [insights, setInsights] = useState([])
   const [suspicious, setSuspicious] = useState([])
-  const [online,     setOnline]     = useState([])
-  const [loading,    setLoading]    = useState(true)
-  const [tab,        setTab]        = useState('insights')  // 'insights' | 'suspicious' | 'online'
-  const [error,      setError]      = useState('')
+  const [online, setOnline] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState('insights')  // 'insights' | 'suspicious' | 'online'
+  const [error, setError] = useState('')
 
   // Email form
-  const [emails,    setEmails]    = useState('')
+  const [emails, setEmails] = useState('')
   const [frequency, setFrequency] = useState('weekly')
-  const [sending,   setSending]   = useState(false)
-  const [emailMsg,  setEmailMsg]  = useState(null)
+  const [sending, setSending] = useState(false)
+  const [emailMsg, setEmailMsg] = useState(null)
 
   const loadAll = useCallback(async () => {
     setLoading(true)
@@ -68,18 +68,18 @@ export default function AdminInsightsPage() {
   }
 
   const statusColor = {
-    '✅ Excellent':         'var(--green)',
-    '⚠️ Needs Improvement': 'var(--orange)',
-    '🚨 Critical':          'var(--red)',
-    '⚪ No Data':           'var(--grey)',
+    ' Excellent': 'var(--green)',
+    ' Needs Improvement': 'var(--orange)',
+    ' Critical': 'var(--red)',
+    ' No Data': 'var(--grey)',
   }
 
   if (loading) return <div className="page-loader"><div className="spinner spinner-dark" /><span>Analysing data...</span></div>
-  if (error)   return <div className="alert alert-error">{error}</div>
+  if (error) return <div className="alert alert-error">{error}</div>
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>🤖 AI Insights & Monitoring</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}> AI Insights & Monitoring</h1>
       <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 20 }}>
         Real-time mess analytics, FeedGuard suspicious activity, and live user monitoring.
       </p>
@@ -87,9 +87,9 @@ export default function AdminInsightsPage() {
       {/* Tab Bar */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 24, flexWrap: 'wrap' }}>
         {[
-          { key: 'insights',   label: '📊 Performance Insights' },
-          { key: 'suspicious', label: `🛡️ Suspicious Feedback (${suspicious.length})` },
-          { key: 'online',     label: `🟢 Online Now (${online.length})` },
+          { key: 'insights', label: ' Performance Insights' },
+          { key: 'suspicious', label: ` Suspicious Feedback (${suspicious.length})` },
+          { key: 'online', label: ` Online Now (${online.length})` },
         ].map(t => (
           <button
             key={t.key}
@@ -107,7 +107,7 @@ export default function AdminInsightsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, marginBottom: 32 }}>
             {insights.length === 0 ? (
               <div className="card" style={{ gridColumn: '1/-1', textAlign: 'center', padding: '48px' }}>
-                <div style={{ fontSize: 40 }}>📊</div>
+                <div style={{ fontSize: 40 }}></div>
                 <p style={{ marginTop: 12, color: 'var(--grey)' }}>No insights yet. Add mess locations and collect feedback first.</p>
               </div>
             ) : insights.map((ins, i) => (
@@ -115,7 +115,7 @@ export default function AdminInsightsPage() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <h3 style={{ fontSize: 16, fontWeight: 700 }}>{ins.mess}</h3>
                   <span style={{ fontSize: 22 }}>
-                    {ins.status?.includes('Excellent') ? '✅' : ins.status?.includes('Needs') ? '⚠️' : ins.status?.includes('Critical') ? '🚨' : '⚪'}
+                    {ins.status?.includes('Excellent') ? '✅' : ins.status?.includes('Needs') ? '' : ins.status?.includes('Critical') ? '⚠️' : '❔'}
                   </span>
                 </div>
                 <div style={{ marginBottom: 12 }}>
@@ -129,9 +129,9 @@ export default function AdminInsightsPage() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
                   {[
-                    { label: 'Overall',  value: ins.overall_avg   },
-                    { label: 'Hygiene',  value: ins.hygiene_score  },
-                    { label: 'Taste',    value: ins.taste_score    },
+                    { label: 'Overall', value: ins.overall_avg },
+                    { label: 'Hygiene', value: ins.hygiene_score },
+                    { label: 'Taste', value: ins.taste_score },
                     { label: 'Feedback', value: ins.total_feedback },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ background: 'var(--bg)', borderRadius: 8, padding: '8px 12px' }}>
@@ -142,7 +142,7 @@ export default function AdminInsightsPage() {
                 </div>
                 {ins.recommendation && (
                   <div style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
-                    💡 {ins.recommendation}
+                    {ins.recommendation}
                   </div>
                 )}
               </div>
@@ -168,7 +168,7 @@ export default function AdminInsightsPage() {
                   {['weekly', 'monthly', 'yearly'].map(f => (
                     <button key={f} onClick={() => setFrequency(f)}
                       className={`btn btn-sm ${frequency === f ? 'btn-primary' : 'btn-ghost'}`}>
-                      {f === 'weekly' ? '📅 Weekly' : f === 'monthly' ? '🗓️ Monthly' : '📆 Yearly'}
+                      {f === 'weekly' ? ' Weekly' : f === 'monthly' ? ' Monthly' : ' Yearly'}
                     </button>
                   ))}
                 </div>
@@ -186,7 +186,7 @@ export default function AdminInsightsPage() {
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>🛡️ FeedGuard — Flagged Submissions</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}> FeedGuard — Flagged Submissions</h2>
               <p style={{ fontSize: 13, color: 'var(--grey)', marginTop: 4 }}>
                 These submissions were flagged by AI as potentially fake or randomly selected.
                 Tokens were deducted from these students.
@@ -263,7 +263,7 @@ export default function AdminInsightsPage() {
         <div className="card" style={{ maxWidth: 640 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>🟢 Who Is Online Right Now</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}> Who Is Online Right Now</h2>
               <p style={{ fontSize: 13, color: 'var(--grey)', marginTop: 4 }}>
                 Users active in the last 3 minutes. Updates on page refresh.
               </p>
@@ -273,15 +273,15 @@ export default function AdminInsightsPage() {
 
           {online.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px', color: 'var(--grey)' }}>
-              <div style={{ fontSize: 36 }}>😴</div>
+              <div style={{ fontSize: 36 }}></div>
               <p style={{ marginTop: 10 }}>No users online right now.</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {online.map((u, i) => {
-                const lastSeen  = new Date(u.last_seen)
-                const secsAgo   = Math.floor((Date.now() - lastSeen) / 1000)
-                const timeLabel = secsAgo < 60 ? `${secsAgo}s ago` : `${Math.floor(secsAgo/60)}m ago`
+                const lastSeen = new Date(u.last_seen)
+                const secsAgo = Math.floor((Date.now() - lastSeen) / 1000)
+                const timeLabel = secsAgo < 60 ? `${secsAgo}s ago` : `${Math.floor(secsAgo / 60)}m ago`
                 const roleColor = u.role === 'admin' ? 'var(--primary)' : u.role === 'mess_staff' ? 'var(--orange)' : 'var(--green)'
                 return (
                   <div key={i} style={{
@@ -305,7 +305,7 @@ export default function AdminInsightsPage() {
                       background: `${roleColor}20`, color: roleColor,
                       borderRadius: 6, padding: '3px 10px', fontSize: 12, fontWeight: 600,
                     }}>
-                      {u.role === 'mess_staff' ? '👨‍🍳 Staff' : u.role === 'admin' ? '🔑 Admin' : '🎓 Student'}
+                      {u.role === 'mess_staff' ? ' Staff' : u.role === 'admin' ? ' Admin' : ' Student'}
                     </span>
                   </div>
                 )
