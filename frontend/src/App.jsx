@@ -6,19 +6,19 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { useEffect } from 'react'
 
-import LoginPage         from './pages/LoginPage'
-import RegisterPage      from './pages/RegisterPage'
-import StudentLoginPage  from './pages/StudentLoginPage'
-import FeedbackPage      from './pages/FeedbackPage'
-import VoterDashboard    from './pages/VoterDashboard'
-import AdminLayout       from './components/AdminLayout'
-import AdminDashboard    from './pages/AdminDashboard'
-import AdminMessPage     from './pages/AdminMessPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import StudentLoginPage from './pages/StudentLoginPage'
+import FeedbackPage from './pages/FeedbackPage'
+import VoterDashboard from './pages/VoterDashboard'
+import AdminLayout from './components/AdminLayout'
+import AdminDashboard from './pages/AdminDashboard'
+import AdminMessPage from './pages/AdminMessPage'
 import AdminInsightsPage from './pages/AdminInsightsPage'
-import AdminUsersPage    from './pages/AdminUsersPage'
-import AdminStaffPage    from './pages/AdminStaffPage'
-import QrPage            from './pages/QrPage'
-import QuestionsPage     from './pages/QuestionsPage'
+import AdminUsersPage from './pages/AdminUsersPage'
+import AdminStaffPage from './pages/AdminStaffPage'
+import QrPage from './pages/QrPage'
+import QuestionsPage from './pages/QuestionsPage'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -31,11 +31,11 @@ function OnlineHeartbeat() {
 
     async function beat() {
       try {
-        await fetch(`${API}/auth/heartbeat`, {
+        await fetch(`${API}/api/auth/heartbeat`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         })
-      } catch {}
+      } catch { }
     }
 
     beat()
@@ -50,7 +50,7 @@ function OnlineHeartbeat() {
 function RequireAuth({ children, roles }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="page-loader"><div className="spinner spinner-dark" /><span>Loading...</span></div>
-  if (!user)   return <Navigate to="/login" replace />
+  if (!user) return <Navigate to="/login" replace />
   if (roles && !roles.includes(user.role)) return <Navigate to="/login" replace />
   return children
 }
@@ -62,11 +62,11 @@ export default function App() {
         <OnlineHeartbeat />
         <Routes>
           {/* ── Public ──────────────────────────────────── */}
-          <Route path="/"              element={<Navigate to="/feedback" replace />} />
-          <Route path="/login"         element={<LoginPage />} />
-          <Route path="/register"      element={<RegisterPage />} />
+          <Route path="/" element={<Navigate to="/feedback" replace />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/student-login" element={<StudentLoginPage />} />
-          <Route path="/feedback"      element={<FeedbackPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
 
           {/* ── Voter ───────────────────────────────────── */}
           <Route path="/voter" element={
@@ -81,14 +81,14 @@ export default function App() {
               <AdminLayout role="admin" />
             </RequireAuth>
           }>
-            <Route index               element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard"    element={<AdminDashboard />} />
-            <Route path="mess"         element={<AdminMessPage />} />
-            <Route path="insights"     element={<AdminInsightsPage />} />
-            <Route path="users"        element={<AdminUsersPage />} />
-            <Route path="staff"        element={<AdminStaffPage />} />
-            <Route path="qr"           element={<QrPage />} />
-            <Route path="questions"    element={<QuestionsPage />} />
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="mess" element={<AdminMessPage />} />
+            <Route path="insights" element={<AdminInsightsPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="staff" element={<AdminStaffPage />} />
+            <Route path="qr" element={<QrPage />} />
+            <Route path="questions" element={<QuestionsPage />} />
           </Route>
 
           {/* ── Mess Staff ──────────────────────────────── */}
@@ -97,10 +97,10 @@ export default function App() {
               <AdminLayout role="mess_staff" />
             </RequireAuth>
           }>
-            <Route index               element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard"    element={<AdminDashboard />} />
-            <Route path="insights"     element={<AdminInsightsPage />} />
-            <Route path="questions"    element={<QuestionsPage />} />
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="insights" element={<AdminInsightsPage />} />
+            <Route path="questions" element={<QuestionsPage />} />
           </Route>
 
           {/* Fallback */}
