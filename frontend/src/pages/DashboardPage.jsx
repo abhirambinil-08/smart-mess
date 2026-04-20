@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/DashboardPage.jsx  — Admin analytics dashboard
 // ============================================================
 
@@ -57,7 +57,7 @@ export default function DashboardPage() {
   const barData = {
     labels,
     datasets: [
-      { label: 'Food Quality', data: stats.map(s => s.avg_food_quality), backgroundColor: '#1A56A0CC' },
+      { label: 'Food Quality', data: stats.map(s => s.avg_food_quality), backgroundColor: '#6C63FFCC' },
       { label: 'Taste', data: stats.map(s => s.avg_taste), backgroundColor: '#27AE60CC' },
       { label: 'Hygiene', data: stats.map(s => s.avg_hygiene), backgroundColor: '#E67E22CC' },
       { label: 'Portion Size', data: stats.map(s => s.avg_portion_size), backgroundColor: '#8E44ADCC' },
@@ -72,13 +72,13 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--dark)', marginBottom: 6 }}>📊 Dashboard</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 24 }}>Live feedback analytics across all mess locations</p>
+      <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>📊 Dashboard</h1>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>Live feedback analytics across all mess locations</p>
 
       {/* ── Stat Cards ──────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
         {[
-          { icon: '📝', label: 'Total Feedback', value: data.total_feedback, bg: '#EBF4FB', ic: '#1A56A0' },
+          { icon: '📝', label: 'Total Feedback', value: data.total_feedback, bg: '#EBF4FB', ic: '#6C63FF' },
           { icon: '🍽️', label: 'Total Mess', value: data.total_mess, bg: '#E8F8F0', ic: '#27AE60' },
           { icon: '⭐', label: 'Best Avg Score', value: stats.length ? Math.max(...stats.map(s => s.overall_avg)).toFixed(2) : 'N/A', bg: '#FFF3E0', ic: '#E67E22' },
           { icon: '📍', label: 'Active Locations', value: stats.length, bg: '#F3E8FF', ic: '#8E44AD' },
@@ -86,8 +86,8 @@ export default function DashboardPage() {
           <div className="stat-card" key={label}>
             <div className="stat-icon" style={{ background: bg, color: ic }}>{icon}</div>
             <div>
-              <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--dark)' }}>{value}</div>
-              <div style={{ fontSize: 13, color: 'var(--grey)' }}>{label}</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>{value}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{label}</div>
             </div>
           </div>
         ))}
@@ -97,7 +97,7 @@ export default function DashboardPage() {
       <div className="card" style={{ marginBottom: 24 }}>
         <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>📈 Ratings by Mess</h2>
         {stats.length === 0
-          ? <p style={{ color: 'var(--grey)', textAlign: 'center', padding: '40px 0' }}>No feedback yet. Submit some feedback to see charts.</p>
+          ? <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '40px 0' }}>No feedback yet. Submit some feedback to see charts.</p>
           : <div style={{ height: 320 }}><Bar data={barData} options={barOptions} /></div>
         }
       </div>
@@ -120,8 +120,8 @@ export default function DashboardPage() {
             <tbody>
               {stats.map((s, i) => (
                 <tr key={s.mess} style={{
-                  borderTop: '1px solid var(--border)',
-                  background: i % 2 === 0 ? 'var(--white)' : 'var(--bg)'
+                  borderTop: '1px solid var(--surface-border)',
+                  background: i % 2 === 0 ? 'var(--white)' : 'rgba(108,99,255,0.04)'
                 }}>
                   <td style={{ padding: '10px 14px', fontWeight: 600 }}>{s.mess}</td>
                   <td style={{ padding: '10px 14px' }}>{s.total_feedback}</td>
@@ -132,7 +132,7 @@ export default function DashboardPage() {
                   <td style={{ padding: '10px 14px' }}>
                     <span style={{
                       fontWeight: 700,
-                      color: s.overall_avg >= 4 ? 'var(--green)' : s.overall_avg >= 3 ? 'var(--orange)' : 'var(--red)'
+                      color: s.overall_avg >= 4 ? 'var(--success)' : s.overall_avg >= 3 ? 'var(--warning)' : 'var(--danger)'
                     }}>
                       {s.overall_avg} ⭐
                     </span>
@@ -152,16 +152,16 @@ export default function DashboardPage() {
             {recent.map((f, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 14px', background: 'var(--bg)', borderRadius: 8
+                padding: '10px 14px', background: 'rgba(108,99,255,0.04)', borderRadius: 8
               }}>
                 <div style={{ fontSize: 20 }}>🍽️</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{f.mess} — {f.meal_type}</div>
-                  {f.comment && <div style={{ fontSize: 12, color: 'var(--grey)', marginTop: 2 }}>"{f.comment}"</div>}
+                  {f.comment && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>"{f.comment}"</div>}
                 </div>
                 <div style={{
                   fontWeight: 700,
-                  color: f.overall >= 4 ? 'var(--green)' : f.overall >= 3 ? 'var(--orange)' : 'var(--red)',
+                  color: f.overall >= 4 ? 'var(--success)' : f.overall >= 3 ? 'var(--warning)' : 'var(--danger)',
                   whiteSpace: 'nowrap', fontSize: 14
                 }}>
                   {f.overall} ⭐
@@ -179,26 +179,26 @@ export default function DashboardPage() {
             🟢 Online Users
             <span style={{
               marginLeft: 10, fontSize: 13, fontWeight: 400,
-              background: '#E8F8F0', color: '#27AE60', padding: '2px 10px', borderRadius: 20
+              background: 'rgba(0,217,166,0.08)', color: '#27AE60', padding: '2px 10px', borderRadius: 20
             }}>
               {online.length} active
             </span>
           </h2>
           {online.length === 0
-            ? <p style={{ color: 'var(--grey)', fontSize: 14 }}>No users active in the last 30 minutes.</p>
+            ? <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>No users active in the last 30 minutes.</p>
             : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {online.map((u, i) => (
                   <div key={i} style={{
                     display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '10px 14px', background: 'var(--bg)', borderRadius: 8
+                    padding: '10px 14px', background: 'rgba(108,99,255,0.04)', borderRadius: 8
                   }}>
                     <div style={{
                       width: 10, height: 10, borderRadius: '50%',
                       background: '#27AE60', flexShrink: 0
                     }} />
                     <div style={{ flex: 1, fontWeight: 600, fontSize: 14 }}>{u.email}</div>
-                    <div style={{ fontSize: 12, color: 'var(--grey)' }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
                       Last seen: {new Date(u.last_seen).toLocaleTimeString()}
                     </div>
                   </div>
@@ -211,3 +211,4 @@ export default function DashboardPage() {
     </div>
   )
 }
+

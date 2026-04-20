@@ -1,7 +1,4 @@
-// ============================================================
-//  utils/api.js  — All backend API calls
-//  Base URL auto-detected via Vite proxy (/api → localhost:8000)
-// ============================================================
+import { saveOfflineFeedback } from './offlineStore'
 
 const BASE = '/api'
 
@@ -22,7 +19,17 @@ async function req(method, path, body = null, isForm = false) {
 
   const res = await fetch(BASE + path, opts)
   const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(data.detail || `Error ${res.status}`)
+  if (!res.ok) {
+    // FastAPI validation errors return detail as an array of {loc, msg, type} objects
+    const detail = data.detail
+    let msg
+    if (Array.isArray(detail)) {
+      msg = detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+    } else {
+      msg = detail || `Error ${res.status}`
+    }
+    throw new Error(msg)
+  }
   return data
 }
 
@@ -49,7 +56,22 @@ export const updateQuestion = (id, data) => req('PUT', `/questions/${id}`, data)
 export const deleteQuestion = (id) => req('DELETE', `/questions/${id}`)
 
 // ── Feedback ──────────────────────────────────────────────────
-export const submitFeedback = (data) => req('POST', '/feedback', data)
+export const submitFeedback = async (data) => {
+  try {
+    return await req('POST', '/feedback', data)
+  } catch (err) {
+    // If it's a network error (failed to fetch), save offline
+    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+      console.warn('[Offline Mode] Saving feedback to local queue...')
+      await saveOfflineFeedback(data)
+      return { 
+        offline: true, 
+        message: 'You are offline. Your feedback has been saved locally and will sync once you are back online! 📥' 
+      }
+    }
+    throw err
+  }
+}
 export const getMyHistory = () => req('GET', '/feedback/my-history')
 export const getAllFeedback = () => req('GET', '/feedback/all')
 export const uploadImage = (file) => {
@@ -72,9 +94,12 @@ export const getInsights = () => req('GET', '/insights')
 export const sendReport = (data) => req('POST', '/insights/send-report', data)
 
 // ── QR Code (returns blob URL) ────────────────────────────────
-export async function getQrUrl(messId) {
+export async function getQrUrl(messId, baseUrl) {
   const token = localStorage.getItem('mess_token')
-  const res = await fetch(`${BASE}/qr/${messId}`, {
+  const url   = new URL(`${BASE}/qr/${messId}`, window.location.origin)
+  if (baseUrl) url.searchParams.append('base_url', baseUrl)
+
+  const res = await fetch(url, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   })
   if (!res.ok) throw new Error('QR generation failed')

@@ -56,9 +56,28 @@ def decode_token(token: str) -> dict:
 
 # ── FastAPI dependency helpers (RBAC) ─────────────────────────
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)) -> dict:
-    """Any authenticated user — voter, mess_staff, or admin."""
-    return decode_token(credentials.credentials)
+from typing import Optional
+
+def get_current_user(
+    token: Optional[str] = None,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False))
+) -> dict:
+    """
+    Any authenticated user. Supports Header or Query Param (for downloads).
+    """
+    actual_token = None
+    if credentials:
+        actual_token = credentials.credentials
+    elif token:
+        actual_token = token
+        
+    if not actual_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return decode_token(actual_token)
 
 
 def require_admin(user: dict = Depends(get_current_user)) -> dict:

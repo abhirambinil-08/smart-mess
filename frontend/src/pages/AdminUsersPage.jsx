@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/AdminUsersPage.jsx  — Voter management + token control
 // ============================================================
 
@@ -48,7 +48,7 @@ export default function AdminUsersPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>👥 Users & Tokens</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 24 }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>
         View all voters and manually adjust token balances.
       </p>
 
@@ -63,7 +63,7 @@ export default function AdminUsersPage() {
         <input className="input" placeholder="🔍 Search by username or email..."
           value={search} onChange={e => setSearch(e.target.value)}
           style={{ maxWidth: 360 }} />
-        <div style={{ fontSize: 14, color: 'var(--grey)', padding: '11px 0' }}>
+        <div style={{ fontSize: 14, color: 'var(--text-secondary)', padding: '11px 0' }}>
           {filtered.length} user{filtered.length !== 1 ? 's' : ''}
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function AdminUsersPage() {
         </table>
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--grey)' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
             No users found.
           </div>
         )}
@@ -146,3 +146,4 @@ export default function AdminUsersPage() {
     </div>
   )
 }
+

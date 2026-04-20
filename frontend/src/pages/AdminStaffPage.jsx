@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/AdminStaffPage.jsx  — Requirement #13
 //  Admin can create mess staff accounts and see their credentials
 // ============================================================
@@ -52,7 +52,7 @@ export default function AdminStaffPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>🧑‍🍳 Mess Staff Accounts</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 28 }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
         Create login credentials for mess staff. They'll get read-only access to dashboard and can manage questions.
       </p>
 
@@ -85,7 +85,7 @@ export default function AdminStaffPage() {
                   🎲 Auto
                 </button>
               </div>
-              <div style={{ fontSize: 11, color: 'var(--grey)', marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
                 Password will be shown once after creation. Save it!
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function AdminStaffPage() {
           {/* Credential card — shown after creation */}
           {created && (
             <div style={{
-              background: 'linear-gradient(135deg, #1A1A2E, #1A56A0)',
+              background: 'linear-gradient(135deg, #1A1A2E, #6C63FF)',
               borderRadius: 14, padding: '24px', color: 'white', marginBottom: 20,
             }}>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>✅ Staff Account Created!</div>
@@ -151,7 +151,7 @@ export default function AdminStaffPage() {
           <div className="card">
             <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
               📋 All Mess Staff
-              <span style={{ fontSize: 13, color: 'var(--grey)', fontWeight: 400, marginLeft: 8 }}>
+              <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 400, marginLeft: 8 }}>
                 ({staffList.length} accounts)
               </span>
             </h2>
@@ -159,7 +159,7 @@ export default function AdminStaffPage() {
             {fetching ? (
               <div className="page-loader"><div className="spinner spinner-dark" /></div>
             ) : staffList.length === 0 ? (
-              <p style={{ color: 'var(--grey)', textAlign: 'center', padding: '24px 0' }}>
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '24px 0' }}>
                 No staff accounts yet. Create one using the form.
               </p>
             ) : (
@@ -185,7 +185,7 @@ export default function AdminStaffPage() {
                             {s.is_active ? '✅ Active' : '🚫 Inactive'}
                           </span>
                         </td>
-                        <td style={{ fontSize: 12, color: 'var(--grey)' }}>
+                        <td style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
                           {new Date(s.created_at).toLocaleDateString()}
                         </td>
                       </tr>
@@ -200,3 +200,4 @@ export default function AdminStaffPage() {
     </div>
   )
 }
+

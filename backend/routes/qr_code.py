@@ -5,6 +5,8 @@
 import io
 import qrcode
 import qrcode.image.svg
+import os
+import socket
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 
@@ -13,17 +15,34 @@ from core.security import require_mess_staff_or_admin
 
 router = APIRouter()
 
-FRONTEND_URL = "http://localhost:5173"
+def get_local_ip():
+    """Helper to find the machine's local IP so QR codes work on mobile phones."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = 'localhost'
+    finally:
+        s.close()
+    return IP
+
+# Get from env or auto-detect
+DEFAULT_FRONTEND = os.getenv("FRONTEND_URL", f"http://{get_local_ip()}:5173")
 
 
 @router.get("/{mess_id}")
-async def generate_qr(mess_id: str):
+async def generate_qr(mess_id: str, base_url: str = None):
     """
     Generate a QR code PNG for the given mess_id.
     The QR encodes the feedback form URL: /?mess=<mess_id>
-    This route is PUBLIC — anyone can scan without logging in.
     """
     db      = get_db()
+    
+    # Use the provided base_url (from the browser) if available
+    target_base = base_url if base_url else DEFAULT_FRONTEND
+    
+    # Verify mess exists
     # Verify mess exists
     from bson import ObjectId
     try:
@@ -34,7 +53,7 @@ async def generate_qr(mess_id: str):
     if not mess:
         raise HTTPException(status_code=404, detail="Mess not found.")
 
-    feedback_url = f"{FRONTEND_URL}/feedback?mess={mess_id}&name={mess['name']}"
+    feedback_url = f"{target_base}/feedback?mess={mess_id}&name={mess['name']}"
 
     qr = qrcode.QRCode(
         version=1,

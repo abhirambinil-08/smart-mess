@@ -28,7 +28,7 @@ async def connect_db():
     await db.feedback.create_index("slot")
     await db.online_sessions.create_index("user_id", unique=True)
 
-    print(f"✅ Connected to MongoDB: {db_name}")
+    print(f"[OK] Connected to MongoDB: {db_name}")
 
 
 async def close_db():
@@ -36,7 +36,7 @@ async def close_db():
     global client
     if client:
         client.close()
-        print("🔌 MongoDB connection closed")
+        print("[OK] MongoDB connection closed")
 
 
 def get_db():

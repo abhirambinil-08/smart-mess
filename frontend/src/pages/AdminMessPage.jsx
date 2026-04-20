@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/AdminMessPage.jsx  — Manage mess locations
 // ============================================================
 
@@ -50,8 +50,8 @@ export default function AdminMessPage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>🍽️ Mess Locations</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 28 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--text-primary)' }}>🍽️ Mess Locations</h1>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
         Add and manage mess locations. Each location gets its own QR code.
       </p>
 
@@ -59,7 +59,7 @@ export default function AdminMessPage() {
 
         {/* Create form */}
         <div className="card">
-          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 18 }}>➕ Add Mess Location</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 18, color: 'var(--text-primary)' }}>➕ Add Mess Location</h2>
           {error   && <div className="alert alert-error"   style={{ marginBottom: 14 }}>{error}</div>}
           {success && <div className="alert alert-success" style={{ marginBottom: 14 }}>{success}</div>}
 
@@ -89,7 +89,7 @@ export default function AdminMessPage() {
         <div className="card">
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
             All Mess Locations
-            <span style={{ fontSize: 13, color: 'var(--grey)', fontWeight: 400, marginLeft: 8 }}>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 400, marginLeft: 8 }}>
               ({messList.length})
             </span>
           </h2>
@@ -97,7 +97,7 @@ export default function AdminMessPage() {
           {loading ? (
             <div className="page-loader"><div className="spinner spinner-dark" /></div>
           ) : messList.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--grey)' }}>
+            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
               <div style={{ fontSize: 40 }}>🍽️</div>
               <p style={{ marginTop: 12 }}>No mess locations yet. Add one using the form.</p>
             </div>
@@ -105,19 +105,19 @@ export default function AdminMessPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {messList.map(m => (
                 <div key={m.id} style={{
-                  background: 'var(--bg)', borderRadius: 10, padding: '14px 18px',
+                  background: 'rgba(108,99,255,0.04)', borderRadius: 10, padding: '14px 18px',
                   display: 'flex', alignItems: 'center', gap: 14,
                 }}>
                   <div style={{ fontSize: 28 }}>🍽️</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600, fontSize: 15 }}>{m.name}</div>
-                    <div style={{ fontSize: 12, color: 'var(--grey)', marginTop: 2 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
                       {m.institution}{m.location ? ` · ${m.location}` : ''}
                     </div>
                   </div>
                   <button
                     className="btn btn-sm"
-                    style={{ background: 'var(--red-light)', color: 'var(--red)', border: 'none' }}
+                    style={{ background: 'var(--danger-light)', color: 'var(--danger)', border: 'none' }}
                     onClick={() => handleDelete(m.id, m.name)}
                   >
                     🗑️ Delete
@@ -131,3 +131,4 @@ export default function AdminMessPage() {
     </div>
   )
 }
+

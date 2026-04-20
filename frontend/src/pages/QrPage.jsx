@@ -21,7 +21,13 @@ export default function QrPage() {
   async function generateQR(mess) {
     setGenerating(g => ({ ...g, [mess.id]: true }))
     try {
-      const url = await getQrUrl(mess.id)
+      // If we are on localhost, the phone won't be able to scan. 
+      // Force use the network IP address (192.168.1.7) for the QR content.
+      const origin = window.location.hostname === 'localhost' 
+        ? 'http://192.168.1.7:5173' 
+        : window.location.origin
+        
+      const url = await getQrUrl(mess.id, origin)
       setQrUrls(prev => ({ ...prev, [mess.id]: url }))
     } catch (err) {
       alert('Failed to generate QR: ' + err.message)
@@ -44,14 +50,14 @@ export default function QrPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>📲 QR Codes</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 28 }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
         Generate QR codes for each mess location. Students scan to open the feedback form instantly.
       </p>
 
       {messList.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '60px' }}>
           <div style={{ fontSize: 48 }}>📲</div>
-          <p style={{ marginTop: 16, color: 'var(--grey)' }}>No mess locations yet. Add them in the Mess Locations page first.</p>
+          <p style={{ marginTop: 16, color: 'var(--text-secondary)' }}>No mess locations yet. Add them in the Mess Locations page first.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
@@ -60,13 +66,13 @@ export default function QrPage() {
               {/* Mess info */}
               <div style={{ fontSize: 36, marginBottom: 8 }}>🍽️</div>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 2 }}>{mess.name}</h3>
-              <p style={{ fontSize: 13, color: 'var(--grey)', marginBottom: 16 }}>{mess.institution}</p>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>{mess.institution}</p>
 
               {/* QR image */}
               {qrUrls[mess.id] ? (
                 <div>
                   <div style={{
-                    background: 'white', border: '2px solid var(--border)',
+                    background: 'rgba(15,22,50,0.5)', border: '2px solid var(--surface-border)',
                     borderRadius: 12, padding: '16px', display: 'inline-block', marginBottom: 14,
                   }}>
                     <img src={qrUrls[mess.id]} alt={`QR for ${mess.name}`} style={{ width: 180, height: 180, display: 'block' }} />
@@ -74,7 +80,7 @@ export default function QrPage() {
 
                   {/* Engaging UI text */}
                   <div style={{
-                    background: 'linear-gradient(135deg, #1A56A0, #1ABC9C)',
+                    background: 'linear-gradient(135deg, #6C63FF, #00D9A6)',
                     borderRadius: 10, padding: '10px 16px', marginBottom: 14, color: 'white',
                   }}>
                     <div style={{ fontSize: 14, fontWeight: 700 }}>🎮 Scan & Earn Tokens!</div>
@@ -105,8 +111,8 @@ export default function QrPage() {
               )}
 
               {/* Feedback URL */}
-              <div style={{ marginTop: 14, fontSize: 11, color: 'var(--grey)', wordBreak: 'break-all' }}>
-                🔗 {`http://localhost:5173/feedback?mess=${mess.id}&name=${mess.name}`}
+              <div style={{ marginTop: 14, fontSize: 11, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
+                🔗 {`${window.location.hostname === 'localhost' ? 'http://192.168.1.7:5173' : window.location.origin}/feedback?mess=${mess.id}&name=${mess.name}`}
               </div>
             </div>
           ))}
@@ -115,3 +121,4 @@ export default function QrPage() {
     </div>
   )
 }
+

@@ -4,7 +4,7 @@
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -19,8 +19,9 @@ import AdminUsersPage from './pages/AdminUsersPage'
 import AdminStaffPage from './pages/AdminStaffPage'
 import QrPage from './pages/QrPage'
 import QuestionsPage from './pages/QuestionsPage'
+import SyncService from './components/SyncService'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API = '' // Use relative path for proxy/prod compatibility
 
 // ── Heartbeat: ping every 60s to mark user as online ─────────
 function OnlineHeartbeat() {
@@ -46,6 +47,33 @@ function OnlineHeartbeat() {
   return null
 }
 
+// ── Connectivity: Visual badge for offline status ────────────
+function ConnectivityBadge() {
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+
+  useEffect(() => {
+    const update = () => setIsOnline(navigator.onLine)
+    window.addEventListener('online', update)
+    window.addEventListener('offline', update)
+    return () => {
+      window.removeEventListener('online', update)
+      window.removeEventListener('offline', update)
+    }
+  }, [])
+
+  if (isOnline) return null
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10000,
+      background: 'rgba(255, 82, 82, 0.95)', color: 'white', textAlign: 'center',
+      padding: '4px 10px', fontSize: 12, fontWeight: 700, letterSpacing: '0.05em'
+    }}>
+      OFFLINE MODE · MateMess will sync your data when you reconnect
+    </div>
+  )
+}
+
 // ── Route Guards ──────────────────────────────────────────────
 function RequireAuth({ children, roles }) {
   const { user, loading } = useAuth()
@@ -60,6 +88,8 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <OnlineHeartbeat />
+        <SyncService />
+        <ConnectivityBadge />
         <Routes>
           {/* ── Public ──────────────────────────────────── */}
           <Route path="/" element={<Navigate to="/feedback" replace />} />

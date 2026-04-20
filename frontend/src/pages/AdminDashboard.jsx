@@ -1,6 +1,5 @@
-// ============================================================
-//  pages/AdminDashboard.jsx  — Analytics dashboard
-//  Accessible by admin (full) and mess_staff (read-only)
+﻿// ============================================================
+//  pages/AdminDashboard.jsx  — Premium Glass Analytics
 // ============================================================
 
 import { useState, useEffect } from 'react'
@@ -37,41 +36,56 @@ export default function AdminDashboard() {
   const barData = {
     labels,
     datasets: [
-      { label: 'Food Quality', data: stats.map(s => s.avg_quality), backgroundColor: '#1A56A0CC' },
-      { label: 'Taste', data: stats.map(s => s.avg_taste), backgroundColor: '#1ABC9CCC' },
-      { label: 'Hygiene', data: stats.map(s => s.avg_hygiene), backgroundColor: '#E67E22CC' },
-      { label: 'Staff', data: stats.map(s => s.avg_staff), backgroundColor: '#8E44ADCC' },
+      { label: 'Food Quality', data: stats.map(s => s.avg_quality), backgroundColor: 'rgba(108, 99, 255, 0.7)', borderRadius: 6 },
+      { label: 'Taste', data: stats.map(s => s.avg_taste), backgroundColor: 'rgba(0, 217, 166, 0.7)', borderRadius: 6 },
+      { label: 'Hygiene', data: stats.map(s => s.avg_hygiene), backgroundColor: 'rgba(255, 179, 71, 0.7)', borderRadius: 6 },
+      { label: 'Staff', data: stats.map(s => s.avg_staff), backgroundColor: 'rgba(255, 107, 157, 0.7)', borderRadius: 6 },
     ],
   }
 
   const barOpts = {
     responsive: true, maintainAspectRatio: false,
-    scales: { y: { min: 0, max: 4, ticks: { stepSize: 1 } } },
-    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: { min: 0, max: 4, ticks: { stepSize: 1, color: '#8892B0' }, grid: { color: 'rgba(108,99,255,0.06)' } },
+      x: { ticks: { color: '#8892B0' }, grid: { display: false } },
+    },
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#8892B0', padding: 16, usePointStyle: true } },
+    },
   }
 
   const isAdmin = user?.role === 'admin'
 
   return (
-    <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>📊 Dashboard</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 24 }}>
+    <div className="fade-in">
+      <h1 style={{
+        fontSize: 26, fontWeight: 800, marginBottom: 4,
+        background: 'linear-gradient(135deg, #6C63FF, #00D9A6)',
+        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+      }}>📊 Dashboard</h1>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
         {isAdmin ? 'Full analytics access' : 'Read-only analytics view'}
       </p>
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 16, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
         {[
-          { label: 'Total Feedback', value: data.total_feedback, bg: '#EBF4FB', ic: '#1A56A0' },
-          { label: 'Mess Locations', value: data.total_mess, bg: '#E8F8F0', ic: '#27AE60' },
-          { label: 'Total Voters', value: data.total_voters, bg: '#F3E8FF', ic: '#8E44AD' },
-          { label: 'Best Score', value: stats.length ? Math.max(...stats.map(s => s.overall_avg)).toFixed(1) + '★' : 'N/A', bg: '#FFF3E0', ic: '#E67E22' },
-        ].map(({ icon, label, value, bg, ic }) => (
+          { label: 'Total Feedback', value: data.total_feedback, icon: '📝', color: '#6C63FF' },
+          { label: 'Mess Locations', value: data.total_mess, icon: '🍽️', color: '#00D9A6' },
+          { label: 'Total Voters', value: data.total_voters, icon: '👥', color: '#FF6B9D' },
+          { label: 'Best Score', value: stats.length ? Math.max(...stats.map(s => s.overall_avg)).toFixed(1) + '★' : 'N/A', icon: '⭐', color: '#FFB347' },
+        ].map(({ label, value, icon, color }) => (
           <div className="stat-card" key={label}>
-            <div className="stat-icon" style={{ background: bg, color: ic }}>{icon}</div>
+            <div className="stat-icon" style={{
+              background: `${color}15`,
+              boxShadow: `0 0 20px ${color}15`,
+            }}>
+              {icon}
+            </div>
             <div>
-              <div style={{ fontSize: 22, fontWeight: 700 }}>{value}</div>
-              <div style={{ fontSize: 13, color: 'var(--grey)' }}>{label}</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>{value}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{label}</div>
             </div>
           </div>
         ))}
@@ -79,9 +93,9 @@ export default function AdminDashboard() {
 
       {/* Bar chart */}
       <div className="card" style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>📈 Ratings by Mess Location</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>📈 Ratings by Mess Location</h2>
         {stats.length === 0
-          ? <p style={{ color: 'var(--grey)', textAlign: 'center', padding: '40px 0' }}>No feedback data yet.</p>
+          ? <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '40px 0' }}>No feedback data yet.</p>
           : <div style={{ height: 300 }}><Bar data={barData} options={barOpts} /></div>
         }
       </div>
@@ -89,7 +103,7 @@ export default function AdminDashboard() {
       {/* Mess table */}
       {stats.length > 0 && (
         <div className="card" style={{ marginBottom: 24, overflowX: 'auto' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}> Mess Rankings</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>🏆 Mess Rankings</h2>
           <table className="table">
             <thead>
               <tr>
@@ -109,7 +123,7 @@ export default function AdminDashboard() {
                   <td>{s.avg_hygiene}</td>
                   <td>{s.avg_staff}</td>
                   <td>
-                    <span style={{ fontWeight: 700, color: s.overall_avg >= 3.5 ? 'var(--green)' : s.overall_avg >= 2.5 ? 'var(--orange)' : 'var(--red)' }}>
+                    <span style={{ fontWeight: 700, color: s.overall_avg >= 3.5 ? 'var(--success)' : s.overall_avg >= 2.5 ? 'var(--warning)' : 'var(--danger)' }}>
                       {s.overall_avg}
                     </span>
                   </td>
@@ -123,14 +137,16 @@ export default function AdminDashboard() {
       {/* Recent feedback */}
       {recent.length > 0 && (
         <div className="card">
-          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}> Recent Feedback</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>🕐 Recent Feedback</h2>
           {recent.map((f, i) => (
-            <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderTop: i > 0 ? '1px solid var(--border)' : 'none' }}>
-              <div style={{ fontSize: 24 }}></div>
+            <div key={i} style={{
+              display: 'flex', gap: 12, padding: '12px 0',
+              borderTop: i > 0 ? '1px solid var(--surface-border)' : 'none',
+            }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{f.username} — {f.meal_type}</div>
-                <div style={{ fontSize: 12, color: 'var(--grey)', marginTop: 2 }}>{f.date_str} · {f.slot} slot</div>
-                {f.comment && <div style={{ fontSize: 13, color: 'var(--dark)', marginTop: 4 }}>"{f.comment}"</div>}
+                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{f.username} — {f.meal_type}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{f.date_str} · {f.slot} slot</div>
+                {f.comment && <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, fontStyle: 'italic' }}>"{f.comment}"</div>}
               </div>
             </div>
           ))}
@@ -139,3 +155,4 @@ export default function AdminDashboard() {
     </div>
   )
 }
+

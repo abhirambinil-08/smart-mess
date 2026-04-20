@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/QuestionsPage.jsx  — Rich Question Type Management
 //  Supports: Single Select, Emoji Rating, Slider, Multi-Select,
 //            Photo Upload, Voice Note
@@ -151,7 +151,7 @@ export default function QuestionsPage() {
   const isSlider   = form.question_type === 'slider'
 
   const typeColor = {
-    single_select: '#1A56A0',
+    single_select: '#6C63FF',
     emoji_rating:  '#F59E0B',
     slider:        '#8B5CF6',
     multi_select:  '#10B981',
@@ -162,7 +162,7 @@ export default function QuestionsPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>❓ Question Management</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 28 }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 28 }}>
         Create rich interactive questions — emoji ratings, sliders, multi-select, photo prompts, and more.
       </p>
 
@@ -196,7 +196,7 @@ export default function QuestionsPage() {
                     type="button"
                     onClick={() => handleTypeChange(t.value)}
                     style={{
-                      border: `2px solid ${form.question_type === t.value ? typeColor[t.value] : 'var(--border)'}`,
+                      border: `2px solid ${form.question_type === t.value ? typeColor[t.value] : 'var(--surface-border)'}`,
                       borderRadius: 8,
                       padding: '8px 10px',
                       textAlign: 'left',
@@ -205,10 +205,10 @@ export default function QuestionsPage() {
                       transition: 'all 0.15s',
                     }}
                   >
-                    <div style={{ fontWeight: 600, fontSize: 12, color: form.question_type === t.value ? typeColor[t.value] : 'var(--dark)' }}>
+                    <div style={{ fontWeight: 600, fontSize: 12, color: form.question_type === t.value ? typeColor[t.value] : 'var(--text-primary)' }}>
                       {t.label}
                     </div>
-                    <div style={{ fontSize: 10, color: 'var(--grey)', marginTop: 2 }}>{t.desc}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginTop: 2 }}>{t.desc}</div>
                   </button>
                 ))}
               </div>
@@ -252,7 +252,7 @@ export default function QuestionsPage() {
                 </label>
 
                 {isSlider ? (
-                  <div style={{ background: 'var(--bg)', borderRadius: 8, padding: 12, fontSize: 13, color: 'var(--grey)' }}>
+                  <div style={{ background: 'rgba(108,99,255,0.04)', borderRadius: 8, padding: 12, fontSize: 13, color: 'var(--text-secondary)' }}>
                     📊 Slider auto-generates 1–10 with matching emojis. Students drag a handle to rate.
                   </div>
                 ) : (
@@ -266,7 +266,7 @@ export default function QuestionsPage() {
                           onChange={e => setOption(i, e.target.value)} style={{ flex: 1 }} />
                         {form.options.length > 2 && (
                           <button type="button" onClick={() => removeOption(i)}
-                            style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>
+                            style={{ color: 'var(--danger)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>
                             ✕
                           </button>
                         )}
@@ -282,7 +282,7 @@ export default function QuestionsPage() {
             )}
 
             {!hasOptions && (
-              <div style={{ background: 'var(--bg)', borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 13, color: 'var(--grey)' }}>
+              <div style={{ background: 'rgba(108,99,255,0.04)', borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 13, color: 'var(--text-secondary)' }}>
                 {form.question_type === 'photo_upload'
                   ? '📸 This question prompts students to upload a photo. No options needed.'
                   : '🎙️ This question prompts students to record a short voice note. No options needed.'}
@@ -304,7 +304,7 @@ export default function QuestionsPage() {
         <div className="card">
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
             All Questions
-            <span style={{ fontSize: 13, color: 'var(--grey)', fontWeight: 400, marginLeft: 8 }}>
+            <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 400, marginLeft: 8 }}>
               ({questions.length})
             </span>
           </h2>
@@ -312,7 +312,7 @@ export default function QuestionsPage() {
           {loading ? (
             <div className="page-loader"><div className="spinner spinner-dark" /></div>
           ) : questions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--grey)' }}>
+            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
               <p>No custom questions yet. Default questions will be used.</p>
             </div>
           ) : (
@@ -322,7 +322,7 @@ export default function QuestionsPage() {
                 const tInfo = QUESTION_TYPES.find(t => t.value === qType)
                 const color = typeColor[qType] || '#666'
                 return (
-                  <div key={q.id} style={{ background: 'var(--bg)', borderRadius: 10, padding: '14px 16px', borderLeft: `3px solid ${color}` }}>
+                  <div key={q.id} style={{ background: 'rgba(108,99,255,0.04)', borderRadius: 10, padding: '14px 16px', borderLeft: `3px solid ${color}` }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{q.question_text}</div>
@@ -338,12 +338,12 @@ export default function QuestionsPage() {
                         {q.options?.length > 0 && (
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             {q.options.slice(0, 5).map((opt, i) => (
-                              <span key={i} style={{ fontSize: 12, background: 'white', border: '1px solid var(--border)', borderRadius: 6, padding: '2px 8px' }}>
+                              <span key={i} style={{ fontSize: 12, background: 'rgba(15,22,50,0.5)', border: '1px solid var(--surface-border)', borderRadius: 6, padding: '2px 8px' }}>
                                 {q.emoji_scale?.[i]} {opt}
                               </span>
                             ))}
                             {q.options.length > 5 && (
-                              <span style={{ fontSize: 12, color: 'var(--grey)' }}>+{q.options.length - 5} more</span>
+                              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>+{q.options.length - 5} more</span>
                             )}
                           </div>
                         )}
@@ -353,7 +353,7 @@ export default function QuestionsPage() {
                         {isAdmin && (
                           <button
                             className="btn btn-sm"
-                            style={{ background: 'var(--red-light)', color: 'var(--red)', border: 'none' }}
+                            style={{ background: 'var(--danger-light)', color: 'var(--danger)', border: 'none' }}
                             onClick={() => handleDelete(q.id)}
                           >
                             🗑️
@@ -362,7 +362,7 @@ export default function QuestionsPage() {
                       </div>
                     </div>
                     {q.created_by && (
-                      <div style={{ fontSize: 11, color: 'var(--grey)', marginTop: 6 }}>
+                      <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 6 }}>
                         Added by: {q.created_by} · {new Date(q.created_at).toLocaleDateString()}
                       </div>
                     )}
@@ -376,3 +376,4 @@ export default function QuestionsPage() {
     </div>
   )
 }
+

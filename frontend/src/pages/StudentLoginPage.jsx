@@ -58,7 +58,7 @@ export default function StudentLoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1A56A0 0%, #1ABC9C 100%)',
+      background: 'var(--bg-deep)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -67,7 +67,7 @@ export default function StudentLoginPage() {
       <div style={{ width: '100%', maxWidth: 420 }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', color: 'white', marginBottom: 28 }}>
+        <div style={{ textAlign: 'center', color: 'var(--text-primary)', marginBottom: 28 }}>
           <div style={{ fontSize: 56 }}>🪪</div>
           <h1 style={{ fontSize: 26, fontWeight: 800, margin: '10px 0 4px' }}>
             Student Verification
@@ -77,7 +77,7 @@ export default function StudentLoginPage() {
           </p>
           {nameParam && (
             <div style={{
-              background: 'rgba(255,255,255,0.15)',
+              background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.15)',
               borderRadius: 8,
               padding: '8px 16px',
               marginTop: 12,
@@ -92,12 +92,13 @@ export default function StudentLoginPage() {
 
           {/* Why login info box */}
           <div style={{
-            background: 'linear-gradient(135deg, #EBF5FF, #E6FBF5)',
+            background: 'rgba(108,99,255,0.08)',
+            border: '1px solid rgba(108,99,255,0.15)',
             borderRadius: 10,
             padding: '12px 16px',
             marginBottom: 20,
             fontSize: 13,
-            color: '#1A56A0',
+            color: 'var(--primary)',
             lineHeight: 1.6,
           }}>
             <strong>🛡️ Why do we verify?</strong><br />
@@ -123,7 +124,7 @@ export default function StudentLoginPage() {
                 autoFocus
                 autoComplete="username"
               />
-              <div style={{ fontSize: 11, color: 'var(--grey)', marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
                 Use your college-assigned Student ID or registered email
               </div>
             </div>
@@ -133,7 +134,7 @@ export default function StudentLoginPage() {
               <input
                 className="input"
                 type="password"
-                placeholder="Your SmartMess password"
+                placeholder="Your MateMess password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -152,14 +153,14 @@ export default function StudentLoginPage() {
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: 18, fontSize: 13, color: 'var(--grey)' }}>
+          <div style={{ textAlign: 'center', marginTop: 18, fontSize: 13, color: 'var(--text-secondary)' }}>
             Not registered yet?{' '}
             <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
               Create account
             </Link>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: 8, fontSize: 13, color: 'var(--grey)' }}>
+          <div style={{ textAlign: 'center', marginTop: 8, fontSize: 13, color: 'var(--text-secondary)' }}>
             Are you Admin or Staff?{' '}
             <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
               Staff Login →
@@ -170,7 +171,7 @@ export default function StudentLoginPage() {
         {/* Token info */}
         <div style={{
           textAlign: 'center',
-          color: 'rgba(255,255,255,0.7)',
+          color: 'var(--text-secondary)',
           fontSize: 12,
           marginTop: 16,
         }}>
@@ -180,3 +181,4 @@ export default function StudentLoginPage() {
     </div>
   )
 }
+

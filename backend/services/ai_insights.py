@@ -7,57 +7,113 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+import asyncio
+import json
 from dotenv import load_dotenv
 
+import google.generativeai as genai
+
 load_dotenv()
+
+api_key = os.getenv("GEMINI_API_KEY", "")
+if api_key:
+    genai.configure(api_key=api_key)
+
+try:
+    model = genai.GenerativeModel('gemini-3-flash-preview')
+except Exception:
+    model = None
 
 
 # ── Hygiene Analysis ──────────────────────────────────────────
 
-def analyse_mess(mess: str, stats: dict) -> dict:
-    """
-    Rule-based AI analysis on a single mess's aggregated stats.
-    Returns status, recommendation, and trend category.
-    """
+async def analyse_with_gemini(mess: str, stats: dict, comments: list[str]) -> dict:
     hygiene  = stats.get("avg_hygiene",  0)
     taste    = stats.get("avg_taste",    0)
     quality  = stats.get("avg_quality",  0)
+    staff    = stats.get("avg_staff",    0)
     overall  = stats.get("overall_avg",  0)
     count    = stats.get("total_feedback", 0)
 
-    # Determine status
-    if overall >= 4.0:
-        status = "✅ Excellent"
-        urgency = "low"
-    elif overall >= 3.0:
-        status = "⚠️ Needs Improvement"
-        urgency = "medium"
-    else:
-        status = "🚨 Critical"
-        urgency = "high"
+    comments_text = "\n".join(f"- {c}" for c in comments) if comments else "No student comments provided."
 
-    # Build recommendation based on weakest area
-    scores = {"Hygiene": hygiene, "Taste": taste, "Food Quality": quality}
-    weakest = min(scores, key=scores.get)
+    if not model or count == 0:
+        return {
+            "mess": mess,
+            "overall_avg": round(overall, 2),
+            "hygiene_score": round(hygiene, 2),
+            "taste_score": round(taste, 2),
+            "quality_score": round(quality, 2),
+            "staff_score": round(staff, 2),
+            "total_feedback": count,
+            "status": "⚪ No Data",
+            "urgency": "low",
+            "weakest_area": "N/A",
+            "recommendation": "No feedback submitted yet." if count == 0 else "Analysis failed (AI model offline).",
+        }
 
-    recommendations = {
-        "Hygiene":      "Increase cleaning frequency. Inspect food storage and conduct staff hygiene training immediately.",
-        "Taste":        "Review menu and cooking methods. Consider gathering specific taste preferences from students.",
-        "Food Quality": "Check ingredient freshness and sourcing. Improve cooking standards and portion consistency.",
-    }
+    prompt = f"""
+You are an expert AI analyst for a university dining system.
+Analyze the following feedback data for "{mess}" and provide a short, actionable recommendation.
 
-    return {
-        "mess":           mess,
-        "overall_avg":    round(overall, 2),
-        "hygiene_score":  round(hygiene,  2),
-        "taste_score":    round(taste,    2),
-        "quality_score":  round(quality,  2),
-        "total_feedback": count,
-        "status":         status,
-        "urgency":        urgency,
-        "weakest_area":   weakest,
-        "recommendation": recommendations[weakest],
-    }
+Data:
+- Total Feedback Count: {count}
+- Overall Average: {overall:.2f}/5.0 (Note: rating is somewhat out of 4, but assume standard sentiment)
+- Hygiene Score: {hygiene:.2f}/5.0
+- Taste Score: {taste:.2f}/5.0
+- Food Quality Score: {quality:.2f}/5.0
+- Staff Behavior Score: {staff:.2f}/5.0
+
+Recent Student Comments:
+{comments_text}
+
+Provide your response as a valid JSON object strictly matching this format without any markdown formatting wrappers (no ```json):
+{{
+    "status": "(pick one: ✅ Excellent, ⚠️ Needs Improvement, 🚨 Critical)",
+    "urgency": "(low, medium, or high)",
+    "weakest_area": "(e.g., Hygiene, Taste, Quality, Staff, None)",
+    "recommendation": "(Write 1-2 concise sentences merging stats insights and reflecting actual student comments. No generic tips, refer to the comments if any exist.)"
+}}
+"""
+    try:
+        response = await asyncio.to_thread(model.generate_content, prompt)
+        
+        text = response.text.strip()
+        if text.startswith("```json"): text = text[7:]
+        if text.startswith("```"): text = text[3:]
+        if text.endswith("```"): text = text[:-3]
+        text = text.strip()
+            
+        data = json.loads(text)
+        
+        return {
+            "mess": mess,
+            "overall_avg": round(overall, 2),
+            "hygiene_score": round(hygiene, 2),
+            "taste_score": round(taste, 2),
+            "quality_score": round(quality, 2),
+            "staff_score": round(staff, 2),
+            "total_feedback": count,
+            "status": data.get("status", "⚠️ Partial Data"),
+            "urgency": data.get("urgency", "medium"),
+            "weakest_area": data.get("weakest_area", "N/A"),
+            "recommendation": data.get("recommendation", "Analysis generated."),
+        }
+    except Exception as e:
+        print(f"Gemini error: {e}")
+        return {
+            "mess": mess,
+            "overall_avg": round(overall, 2),
+            "hygiene_score": round(hygiene, 2),
+            "taste_score": round(taste, 2),
+            "quality_score": round(quality, 2),
+            "staff_score": round(staff, 2),
+            "total_feedback": count,
+            "status": "⚠️ Error",
+            "urgency": "medium",
+            "weakest_area": "N/A",
+            "recommendation": "AI analysis failed to complete.",
+        }
 
 
 # ── Email Report Generation ───────────────────────────────────

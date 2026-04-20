@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 //  pages/MessPage.jsx  — Create mess & download QR codes
 // ============================================================
 
@@ -62,7 +62,7 @@ export default function MessPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 6 }}>🍽️ Mess Configuration</h1>
-      <p style={{ color: 'var(--grey)', fontSize: 14, marginBottom: 24 }}>Add mess locations and manage their QR codes</p>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24 }}>Add mess locations and manage their QR codes</p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 24, alignItems: 'start' }}>
 
@@ -93,7 +93,7 @@ export default function MessPage() {
         <div className="card">
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
             📋 All Mess Locations
-            <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--grey)', marginLeft: 8 }}>
+            <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', marginLeft: 8 }}>
               ({messList.length} total)
             </span>
           </h2>
@@ -101,17 +101,17 @@ export default function MessPage() {
           {loading
             ? <div className="page-loader"><div className="spinner spinner-dark" /></div>
             : messList.length === 0
-            ? <p style={{ color: 'var(--grey)', textAlign: 'center', padding: '30px 0' }}>No mess added yet.</p>
+            ? <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '30px 0' }}>No mess added yet.</p>
             : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {messList.map(m => (
                   <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '12px 14px', background: 'var(--bg)', borderRadius: 8,
-                    border: '1px solid var(--border)' }}>
+                    padding: '12px 14px', background: 'rgba(108,99,255,0.04)', borderRadius: 8,
+                    border: '1px solid var(--surface-border)' }}>
                     <div style={{ fontSize: 24 }}>🍱</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>{m.name}</div>
-                      <div style={{ fontSize: 12, color: 'var(--grey)' }}>{m.institution}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{m.institution}</div>
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
                       <button className="btn btn-outline btn-sm"
@@ -137,13 +137,13 @@ export default function MessPage() {
       {qrMess && (
         <div className="card" style={{ marginTop: 24, textAlign: 'center' }}>
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>QR Code — {qrMess}</h2>
-          <p style={{ fontSize: 13, color: 'var(--grey)', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>
             Print this and place it inside the mess. Students scan to open the feedback form.
           </p>
           <img
             src={getQRCode(qrMess)}
             alt={`QR for ${qrMess}`}
-            style={{ width: 220, height: 220, border: '2px solid var(--border)', borderRadius: 12 }}
+            style={{ width: 220, height: 220, border: '2px solid var(--surface-border)', borderRadius: 12 }}
           />
           <div style={{ marginTop: 16 }}>
             <button className="btn btn-green" onClick={() => downloadQR(qrMess)}>
@@ -155,3 +155,4 @@ export default function MessPage() {
     </div>
   )
 }
+
