@@ -1,200 +1,90 @@
-# 🍱 Smart Mess Feedback System v2
+# 🍱 MateMess — Ultimate Mess Companion v2.0
 
-A full-stack, production-ready QR-based feedback system for educational institution mess/canteens.
-
----
-
-## 🏗️ Tech Stack
-
-| Layer     | Technology                                  |
-|-----------|---------------------------------------------|
-| Frontend  | React 18 + Vite + React Router              |
-| Backend   | FastAPI (Python) + Uvicorn                  |
-| Database  | MongoDB (Motor async driver)                |
-| Auth      | JWT tokens (python-jose + bcrypt)           |
-| Charts    | Chart.js + react-chartjs-2                  |
-| QR Codes  | qrcode (PIL)                                |
-| Email     | SMTP (smtplib) — works with Gmail           |
+**MateMess** is a premium, AI-driven, offline-first feedback ecosystem designed for campus dining. It transforms raw student data into professional administrative intelligence using state-of-the-art Generative AI.
 
 ---
 
-## 📁 Folder Structure
+## 🌟 Key Modernisations (v2.0)
 
+- **🧠 Gemini 3 Flash AI**: Real-time sentiment analysis that reads student comments to provide actionable "Action Plans."
+- **📥 Professional Word Export**: One-click generation of fully formatted `.docx` reports for management meetings.
+- **📡 Stable Tunneling**: Optimized IPv4 and SSL-ready relative API mapping for 100% stable mobile access via Localtunnel.
+- **🛰️ Offline-First PWA**: Background synchronization allows students to submit feedback even with zero connectivity.
+- **🎨 Glassmorphism UI**: A high-end, dark-mode design system with premium aesthetics and smooth transitions.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer          | Technology                                   |
+|----------------|----------------------------------------------|
+| **Frontend**   | React 18 + Vite + **Vite PWA**               |
+| **Backend**    | FastAPI (Python) + **Gemini 3 Flash AI**    |
+| **Database**   | MongoDB (Motor async)                        |
+| **Reporting**  | **python-docx** + SMTP Email                 |
+| **Tunnels**    | Localtunnel with optimized startup delays   |
+| **Storage**    | IndexedDB (for offline sync)                 |
+
+---
+
+## 🚀 One-Click Quick Start
+
+The quickest way to start the entire ecosystem (Backend, Frontend, and Public Tunnel) is using the new PowerShell launcher:
+
+```powershell
+.\start-smartmess.ps1
 ```
-mess-system-v2/
-├── backend/
-│   ├── core/
-│   │   ├── database.py       # MongoDB connection + indexes
-│   │   └── security.py       # JWT + RBAC dependencies
-│   ├── models/
-│   │   └── schemas.py        # All Pydantic request/response shapes
-│   ├── routes/
-│   │   ├── auth.py           # Login, register, staff creation
-│   │   ├── feedback.py       # Submission, image upload, history
-│   │   ├── questions.py      # Dynamic MCQ management
-│   │   ├── tokens.py         # Token balance, redeem, leaderboard
-│   │   ├── dashboard.py      # Analytics aggregation
-│   │   ├── ai_insights.py    # AI analysis + email reports
-│   │   ├── qr_code.py        # QR code PNG generation
-│   │   └── mess_config.py    # Mess CRUD
-│   ├── services/
-│   │   ├── token_service.py  # Token award logic (rare 10 = 5%)
-│   │   ├── time_service.py   # Time slot enforcement
-│   │   └── ai_insights.py    # Hygiene analysis + HTML email
-│   ├── main.py               # FastAPI app entry point
-│   ├── requirements.txt
-│   └── .env                  # Config (MongoDB, JWT, SMTP)
-│
-└── frontend/
-    └── src/
-        ├── context/
-        │   └── AuthContext.jsx       # Global auth state
-        ├── utils/
-        │   └── api.js                # All API calls
-        ├── components/
-        │   └── AdminLayout.jsx       # Sidebar shell
-        ├── pages/
-        │   ├── LoginPage.jsx         # Universal login
-        │   ├── RegisterPage.jsx      # Voter self-registration
-        │   ├── FeedbackPage.jsx      # MCQ + emoji public form
-        │   ├── VoterDashboard.jsx    # Tokens, rewards, history
-        │   ├── AdminDashboard.jsx    # Analytics with charts
-        │   ├── AdminMessPage.jsx     # Mess CRUD
-        │   ├── AdminStaffPage.jsx    # Staff credential generator ✅ Req #13
-        │   ├── AdminInsightsPage.jsx # AI insights + email reports
-        │   ├── AdminUsersPage.jsx    # User management + token control
-        │   ├── QuestionsPage.jsx     # Dynamic MCQ management
-        │   └── QrPage.jsx            # QR code generator
-        ├── App.jsx                   # Routes for all roles
-        ├── index.css                 # Design system
-        └── main.jsx
-```
+*This script automatically configures the environments and waits 10 seconds for stability before opening your public mobile link.*
 
 ---
 
-## 🚀 Setup & Run
+## 📂 Advanced Features
 
-### 1. Backend
+### 🧠 AI Analytics & Insights
+Admins no longer need to sift through thousands of scores. The **Gemini Analytics** engine:
+1. Aggregates real-time comments.
+2. Identifies specific hygiene or taste issues.
+3. Suggests professional recommendations.
+4. Exportable as a **Professional Word Document**.
 
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+### 📡 Connectivity (Remote Access)
+Built specifically for campus environments with poor signal:
+- **Relative API Mapping**: Works seamlessly on both `http://localhost` and `https://loca.lt` without CORS or Mixed Content errors.
+- **IPv4 Binding**: Uses explicit `127.0.0.1` binding to prevent tunnel disconnects.
 
-# Copy and edit .env file
-cp .env .env.local
-# Edit: MONGO_URL, JWT_SECRET, SMTP_USER, SMTP_PASS
-
-uvicorn main:app --reload
-# API runs at http://localhost:8000
-# Swagger docs at http://localhost:8000/docs
-```
-
-### 2. Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-# App runs at http://localhost:5173
-```
-
-### 3. Create First Admin
-
-```bash
-curl -X POST http://localhost:8000/api/auth/setup \
-  -H "Content-Type: application/json" \
-  -d '{"email":"admin@mess.com","password":"admin123"}'
-```
+### 🛡️ FeedGuard — Fraud Detection
+Uses advanced AI scoring to detect:
+- Randomly selected MCQ answers.
+- Fake / Bot submissions.
+- Duplicate patterns.
+*Suspicious users are flagged, and their token rewards are automatically revoked.*
 
 ---
 
-## 👥 Roles & Access
+## 🎮 Gamification & Rewards
 
-| Feature                      | Admin | Mess Staff | Voter |
-|------------------------------|-------|------------|-------|
-| View dashboard & charts      | ✅    | ✅ (read)  | ❌    |
-| Submit feedback              | ❌    | ❌         | ✅    |
-| Manage questions             | ✅    | ✅         | ❌    |
-| Create mess locations        | ✅    | ❌         | ❌    |
-| View AI insights             | ✅    | ✅ (read)  | ❌    |
-| Send email reports           | ✅    | ❌         | ❌    |
-| Create staff accounts        | ✅    | ❌         | ❌    |
-| Adjust user tokens           | ✅    | ❌         | ❌    |
-| See online users             | ✅    | ❌         | ❌    |
-| View own tokens & rewards    | ❌    | ❌         | ✅    |
+Students earn tokens for genuine feedback, unlocking premium rewards:
+
+| Level | Tokens | Reward |
+| :--- | :--- | :--- |
+|  Beginner | 0—154 | Keep going! |
+| Food Explorer | 155—369 | Extra fruit |
+| Mess Legend | 1600—2999 | Free snack or drink |
+| Ultimate Foodie | 3000+ | Special snack pass |
 
 ---
 
-## 🕒 Feedback Time Slots
-
-| Slot      | Window           |
-|-----------|------------------|
-| Morning   | 7:00 AM – 11:00 AM |
-| Afternoon | 1:00 PM – 3:00 PM  |
-| Evening   | 7:00 PM – 10:00 PM |
-
-**Rules:**
-- Max 1 feedback per slot per day
-- Max 3 feedbacks per day total
-
----
-
-## 🪙 Token System
-
-- Each feedback submission awards **1–9 tokens** (95% chance)
-- **10 tokens** is a **rare reward** (only 5% chance!)
-- Tokens accumulate and unlock levels + rewards
-
-| Level            | Tokens Required | Reward                        |
-|------------------|-----------------|-------------------------------|
-| 🌱 Beginner      | 0–154           | Keep going!                   |
-| 🍎 Food Explorer | 154–369         | Extra fruit 🍎                |
-| 🌟 Mess Influencer | 369–649       | Extra roti / add-on 🫓        |
-| 🎩 Food Critic   | 649–1599        | Priority serving (skip line) ⚡ |
-| 🏆 Mess Legend   | 1599–2999       | Free snack or drink 🥤        |
-| 👑 Ultimate Foodie | 2999+         | Special snack pass 🎁         |
-
----
-
-## 📊 Database Collections (MongoDB)
-
-| Collection       | Purpose                              |
-|------------------|--------------------------------------|
-| `users`          | All users (admin, mess_staff, voter) |
-| `feedback`       | All submitted feedback               |
-| `questions`      | Custom MCQ questions                 |
-| `mess`           | Mess locations                       |
-| `online_sessions`| Track who is logged in               |
-| `redemptions`    | Reward redemption log                |
-| `token_logs`     | Admin token adjustment history       |
-
----
-
-## ✉️ Email Reports
+## 📧 Enterprise Reporting
 
 Configure Gmail SMTP in `.env`:
 ```
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password   # Use Gmail App Password (2FA required)
+SMTP_PASS=your_app_password
 ```
-
-Supports: **Weekly / Monthly / Yearly** reports to **multiple recipients**.
-
----
-
-## 🔑 Requirement #13 — Staff Credential Generator
-
-Admin can go to `/admin/staff` to:
-1. Enter staff name, email, department
-2. Set or auto-generate a password
-3. Click "Create Staff Account"
-4. A credential card appears showing login email + password
-5. Copy credentials button copies to clipboard for sharing
+*Supports automated Weekly, Monthly, and Yearly reports to multiple administrator emails.*
 
 ---
 
-Built with ❤️ by Team SmartMess
+Built with ❤️ by Team MateMess
